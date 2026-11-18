@@ -1,0 +1,9 @@
+[{
+  "id": "remediate",
+  "execute-command": "/opt/soc/automation/run_remediation.sh",
+  "command-working-directory": "/opt/soc/automation",
+  "pass-arguments-to-command": [
+    { "source": "payload", "name": "alerts.0.labels.instance" },
+    { "source": "payload", "name": "alerts.0.labels.remediate" }
+  ]
+}]

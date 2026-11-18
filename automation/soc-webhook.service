@@ -1,0 +1,11 @@
+[Unit]
+Description=SOC remediation webhook
+After=network.target
+
+[Service]
+User=MJ416
+ExecStart=/usr/bin/webhook -hooks /opt/soc/automation/hooks.json -ip 0.0.0.0 -port 9000 -verbose
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

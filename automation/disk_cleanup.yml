@@ -1,0 +1,16 @@
+- hosts: '{{ target }}'
+  tasks:
+  - name: Run approved cleanup script
+    command: sudo -n /usr/local/bin/disk_cleanup.sh
+  - name: Check usage
+    shell: df --output=pcent / | tail -1 | tr -dc 0-9
+    register: usage
+    changed_when: false
+  - name: Escalate if still above 90 percent
+    uri:
+      url: http://10.10.10.11:9093/api/v2/alerts
+      method: POST
+      body_format: json
+      body: [{labels: {alertname: RemediationFailed, severity: critical, service: automation, instance: '{{ target }}'}}]
+    delegate_to: localhost
+    when: usage.stdout | int > 90
