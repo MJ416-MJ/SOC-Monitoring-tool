@@ -1,0 +1,32 @@
+groups:
+- name: soc
+  rules:
+  - alert: DiskSpaceLow
+    expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|iso9660"} / node_filesystem_size_bytes) * 100 < 15
+    for: 1m
+    labels:
+      severity: warning
+      service: disk
+      remediate: disk_cleanup
+    annotations:
+      summary: "{{ $labels.instance }} {{ $labels.mountpoint }} below 15% free"
+  - alert: DiskSpaceCritical
+    expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|iso9660"} / node_filesystem_size_bytes) * 100 < 5
+    for: 1m
+    labels:
+      severity: critical
+      service: disk
+    annotations:
+      summary: "{{ $labels.instance }} disk critically full"
+  - alert: HostDown
+    expr: up{job="node"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      service: host
+    annotations:
+      summary: "{{ $labels.instance }} is down"
+  - alert: Watchdog
+    expr: vector(1)
+    labels:
+      severity: info

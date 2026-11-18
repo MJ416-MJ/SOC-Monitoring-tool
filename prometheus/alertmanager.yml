@@ -1,0 +1,67 @@
+global:
+  smtp_smarthost: smtp.gmail.com:587
+  smtp_from: group2.soclab@gmail.com
+  smtp_auth_username: group2.soclab@gmail.com
+  smtp_auth_password_file: /etc/alertmanager/smtp_pass
+route:
+  receiver: email-team
+  group_by: [alertname, instance]
+  group_wait: 10s
+  repeat_interval: 4h
+  routes:
+    - matchers:
+        - severity="info"
+      receiver: blackhole
+    - matchers:
+        - severity="critical"
+      receiver: critical-page
+      continue: true
+    - matchers:
+        - remediate=~".+"
+      receiver: auto-remediate
+      continue: true
+    - matchers:
+        - service="disk"
+      receiver: owner-ahmed
+    - matchers:
+        - service="host"
+      receiver: owner-ahmed
+    - matchers:
+        - service="network"
+      receiver: owner-terry
+    - matchers:
+        - service="notifications"
+      receiver: owner-pritpal
+    - matchers:
+        - service="automation"
+      receiver: owner-malcolm
+receivers:
+  - name: blackhole
+  - name: email-team
+    email_configs:
+      - to: group2.soclab@gmail.com
+        send_resolved: true
+  - name: critical-page
+    webhook_configs:
+      - url: http://10.10.10.11:8088/send
+        send_resolved: false
+  - name: auto-remediate
+    webhook_configs:
+      - url: http://10.10.10.11:9000/hooks/remediate
+        send_resolved: false
+  - name: owner-ahmed
+    email_configs:
+      - to: group2.soclab@gmail.com
+        send_resolved: true
+  - name: owner-terry
+    email_configs:
+      - to: group2.soclab@gmail.com
+        send_resolved: true
+  - name: owner-pritpal
+    email_configs:
+      - to: group2.soclab@gmail.com
+        send_resolved: true
+  - name: owner-malcolm
+    email_configs:
+      - to: group2.soclab@gmail.com
+        send_resolved: true
