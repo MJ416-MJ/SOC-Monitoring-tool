@@ -1,7 +1,7 @@
 global:
   smtp_smarthost: smtp.gmail.com:587
-  smtp_from: group2.soclab@gmail.com
-  smtp_auth_username: group2.soclab@gmail.com
+  smtp_from: soc-team@example.com
+  smtp_auth_username: soc-team@example.com
   smtp_auth_password_file: /etc/alertmanager/smtp_pass
 route:
   receiver: email-team
@@ -39,7 +39,7 @@ receivers:
   - name: blackhole
   - name: email-team
     email_configs:
-      - to: group2.soclab@gmail.com
+      - to: soc-team@example.com
         send_resolved: true
   - name: critical-page
     webhook_configs:
@@ -51,17 +51,17 @@ receivers:
         send_resolved: false
   - name: owner-ahmed
     email_configs:
-      - to: group2.soclab@gmail.com
+      - to: person1@example.com
         send_resolved: true
   - name: owner-terry
     email_configs:
-      - to: group2.soclab@gmail.com
+      - to: person2@example.com
         send_resolved: true
   - name: owner-pritpal
     email_configs:
-      - to: group2.soclab@gmail.com
+      - to: person3@example.com
         send_resolved: true
   - name: owner-malcolm
     email_configs:
-      - to: group2.soclab@gmail.com
+      - to: person4@example.com
         send_resolved: true
